@@ -7,7 +7,6 @@ import (
 
 type OrderModelValidator struct {
 	Order struct {
-		ID              uint   `json:"id" binding:"required"`
 		ClientID        string `json:"client_id" binding:"required" gorm:"size:2048"`
 		ItemID          string `json:"item_id" binding:"required" gorm:"size:2048"`
 		Quantity        string `json:"quantity" binding:"required" gorm:"size:2048"`
@@ -24,7 +23,6 @@ func (v *OrderModelValidator) Bind(c *gin.Context) error {
 		return err
 	}
 
-	v.OrderModel.ID = v.Order.ID
 	v.OrderModel.ClientID = v.Order.ClientID
 	v.OrderModel.ItemID = v.Order.ItemID
 	v.OrderModel.Quantity = v.Order.Quantity
@@ -42,7 +40,6 @@ func NewOrderModelValidator() OrderModelValidator {
 func NewOrderModelValidatorFillWith(orderModel OrderModel) OrderModelValidator {
 	return OrderModelValidator{
 		Order: struct {
-			ID              uint   `json:"id" binding:"required"`
 			ClientID        string `json:"client_id" binding:"required" gorm:"size:2048"`
 			ItemID          string `json:"item_id" binding:"required" gorm:"size:2048"`
 			Quantity        string `json:"quantity" binding:"required" gorm:"size:2048"`
@@ -50,7 +47,6 @@ func NewOrderModelValidatorFillWith(orderModel OrderModel) OrderModelValidator {
 			DateInitialized string `json:"date_initialized" binding:"required" gorm:"size:2048"`
 			Price           string `json:"price" binding:"required" gorm:"size:2048"`
 		}{
-			ID:              orderModel.ID,
 			ClientID:        orderModel.ClientID,
 			ItemID:          orderModel.ItemID,
 			Quantity:        orderModel.Quantity,
