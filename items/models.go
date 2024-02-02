@@ -9,7 +9,7 @@ type ItemModel struct {
 	gorm.Model
 	ID    uint   `gorm:"primary_key"`
 	Name  string `gorm:"size:2048"`
-	Price string `gorm:"size:2048"`
+	Price int    `gorm:"size:2048"`
 }
 
 // Migrate the schema to the database if needed

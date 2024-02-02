@@ -16,7 +16,7 @@ var DB *gorm.DB
 // Open the database and establish the connection
 func Init() *gorm.DB {
 	// Specify connection properties.
-	dsn := "user=jwsqrlln password=7n6ooKGLIH3SDEdrdSrqehDP84u6ZSgf dbname=jwsqrlln host=hattie.db.elephantsql.com port=5432 sslmode=require"
+	dsn := "user=fjqirbao password=JF7nNckyyTmyxZ2vDSTsBzC9JxxFynaz dbname=fjqirbao host=hattie.db.elephantsql.com port=5432 sslmode=require"
 
 	// Open the database connection.
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

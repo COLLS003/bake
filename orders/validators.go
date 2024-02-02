@@ -1,18 +1,23 @@
+// OrderModelValidator.go
 package orders
 
 import (
 	"colls.labs.bake/database"
+	"colls.labs.bake/items"
 	"github.com/gin-gonic/gin"
 )
 
 type OrderModelValidator struct {
 	Order struct {
-		ClientID        string `json:"client_id" binding:"required" gorm:"size:2048"`
-		ItemID          string `json:"item_id" binding:"required" gorm:"size:2048"`
-		Quantity        string `json:"quantity" binding:"required" gorm:"size:2048"`
-		DueDate         string `json:"due_date" binding:"required" gorm:"size:2048"`
-		DateInitialized string `json:"date_initialized" binding:"required" gorm:"size:2048"`
-		Price           string `json:"price" binding:"required" gorm:"size:2048"`
+		Client struct {
+			ClientID string `json:"clientID" binding:"required" gorm:"size:2048"`
+		} `json:"client" binding:"required"`
+		SelectedItems []struct {
+			ItemID   int    `json:"itemID" binding:"required" gorm:"size:2048"`
+			Quantity int    `json:"quantity" binding:"required"`
+			Price    int    `json:"price" binding:"required"`
+			Name     string `json:"name" binding:"required"`
+		} `json:"selectedItems" binding:"required"`
 	} `json:"order"`
 	OrderModel OrderModel `json:"-"`
 }
@@ -23,14 +28,35 @@ func (v *OrderModelValidator) Bind(c *gin.Context) error {
 		return err
 	}
 
-	v.OrderModel.ClientID = v.Order.ClientID
-	v.OrderModel.ItemID = v.Order.ItemID
-	v.OrderModel.Quantity = v.Order.Quantity
-	v.OrderModel.DueDate = v.Order.DueDate
-	v.OrderModel.DateInitialized = v.Order.DateInitialized
-	v.OrderModel.Price = v.Order.Price
+	// Extracting values from the new structure
+	v.OrderModel.ClientID = v.Order.Client.ClientID
+	v.OrderModel.Price = v.calculateTotalPrice()
+
+	for _, item := range v.Order.SelectedItems {
+		orderItem := OrderItemModel{
+			Item: items.ItemModel{
+				// Assuming you want to map 'Name' and 'Price' from ItemModel
+				ID:    uint(item.ItemID),
+				Name:  item.Name,
+				Price: item.Price,
+			},
+			Quantity: item.Quantity,
+			Price:    item.Price,
+		}
+		v.OrderModel.SelectedItems = append(v.OrderModel.SelectedItems, orderItem)
+	}
+
+	// Other assignments...
 
 	return nil
+}
+
+func (v *OrderModelValidator) calculateTotalPrice() int {
+	totalPrice := 0
+	for _, item := range v.Order.SelectedItems {
+		totalPrice += item.Price
+	}
+	return totalPrice
 }
 
 func NewOrderModelValidator() OrderModelValidator {
@@ -39,20 +65,6 @@ func NewOrderModelValidator() OrderModelValidator {
 
 func NewOrderModelValidatorFillWith(orderModel OrderModel) OrderModelValidator {
 	return OrderModelValidator{
-		Order: struct {
-			ClientID        string `json:"client_id" binding:"required" gorm:"size:2048"`
-			ItemID          string `json:"item_id" binding:"required" gorm:"size:2048"`
-			Quantity        string `json:"quantity" binding:"required" gorm:"size:2048"`
-			DueDate         string `json:"due_date" binding:"required" gorm:"size:2048"`
-			DateInitialized string `json:"date_initialized" binding:"required" gorm:"size:2048"`
-			Price           string `json:"price" binding:"required" gorm:"size:2048"`
-		}{
-			ClientID:        orderModel.ClientID,
-			ItemID:          orderModel.ItemID,
-			Quantity:        orderModel.Quantity,
-			DueDate:         orderModel.DueDate,
-			DateInitialized: orderModel.DateInitialized,
-			Price:           orderModel.Price,
-		},
+		OrderModel: orderModel,
 	}
 }

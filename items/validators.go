@@ -10,7 +10,7 @@ import (
 type ItemModelValidator struct {
 	Item struct {
 		Name  string `form:"name" json:"name" binding:"required" gorm:"size:2048"`
-		Price string `form:"price" json:"price" binding:"required" gorm:"size:2048"`
+		Price int    `form:"price" json:"price" binding:"required" gorm:"size:2048"`
 	} `json:"Item"`
 	ItemModel ItemModel `json:"-"`
 }
@@ -38,7 +38,7 @@ func NewItemModelValidatorFillWith(ItemModel ItemModel) ItemModelValidator {
 	return ItemModelValidator{
 		Item: struct {
 			Name  string `form:"name" json:"name" binding:"required" gorm:"size:2048"`
-			Price string `form:"price" json:"price" binding:"required" gorm:"size:2048"`
+			Price int    `form:"price" json:"price" binding:"required" gorm:"size:2048"`
 		}{
 			Name:  ItemModel.Name,
 			Price: ItemModel.Price,
