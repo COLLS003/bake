@@ -33,6 +33,7 @@ func (v *OrderModelValidator) Bind(c *gin.Context) error {
 
 	for _, item := range v.Order.SelectedItems {
 		orderItem := OrderItemModel{
+			ItemID:   uint(item.ItemID),
 			Name:     item.Name,
 			Quantity: item.Quantity,
 			Price:    item.Price,
