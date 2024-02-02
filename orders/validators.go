@@ -3,7 +3,6 @@ package orders
 
 import (
 	"colls.labs.bake/database"
-	"colls.labs.bake/items"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,12 +33,7 @@ func (v *OrderModelValidator) Bind(c *gin.Context) error {
 
 	for _, item := range v.Order.SelectedItems {
 		orderItem := OrderItemModel{
-			Item: items.ItemModel{
-				// Assuming you want to map 'Name' and 'Price' from ItemModel
-				ID:    uint(item.ItemID),
-				Name:  item.Name,
-				Price: item.Price,
-			},
+			Name:     item.Name,
 			Quantity: item.Quantity,
 			Price:    item.Price,
 		}

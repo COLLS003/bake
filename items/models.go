@@ -64,16 +64,3 @@ func GetItemByID(id uint) (ItemModel, error) {
 }
 
 // get Item by  email
-func GetItemByEmail(email string) (ItemModel, error) {
-	db := database.GetConnection()
-	var Item ItemModel
-	err := db.Where("Email = ?", email).First(&Item).Error
-	return Item, err
-}
-
-func GetItemByInitiatorID(id uint) ([]ItemModel, error) {
-	db := database.GetConnection()
-	var Items []ItemModel
-	err := db.Where("Initiator = ?", id).Find(&Items).Error
-	return Items, err
-}

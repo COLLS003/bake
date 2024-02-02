@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"colls.labs.bake/database"
-	"colls.labs.bake/items"
 	"gorm.io/gorm"
 )
 
@@ -17,13 +16,11 @@ type OrderModel struct {
 	Price         int              `gorm:"size:2048"`
 	SelectedItems []OrderItemModel `gorm:"foreignKey:OrderModelID"`
 }
-
-// OrderItemModel in models.go
 type OrderItemModel struct {
 	gorm.Model
-	OrderModelID uint
-	ItemID       uint            // Foreign key referencing ItemModel
-	Item         items.ItemModel `gorm:"foreignKey:ItemID"`
+	OrderModelID uint // Foreign key referencing OrderModel
+	Name         string
+	ItemID       uint `gorm:"foreignKey:ItemID"`
 	Quantity     int
 	Price        int
 }

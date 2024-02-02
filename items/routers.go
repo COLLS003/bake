@@ -12,7 +12,6 @@ import (
 func Create(router *gin.RouterGroup) {
 	router.POST("/create", CreateItem)
 	router.GET("/read/:id", ReadSingleItem)
-	router.GET("/read/Initiator/:Initiator", ReadItemUsingInitiatorID)
 	router.PUT("/update/:id", UpdateItem)
 	router.DELETE("/delete/:id", DeleteItem)
 	router.GET("/list", ItemsList)
@@ -116,37 +115,6 @@ func ItemsList(c *gin.Context) {
 	serializer := NewItemsSerializer(c, ItemsModels)
 	response := serializer.Response()
 	c.JSON(http.StatusOK, gin.H{"Items": response})
-}
-
-func ReadItemUsingInitiatorID(c *gin.Context) {
-	ItemID := c.Param("Initiator")
-	ItemIDUint, err := strconv.ParseUint(ItemID, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Initiator  ID"})
-		return
-	}
-
-	ItemModels, err := GetItemByInitiatorID(uint(ItemIDUint))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, database.NewError("Item", err))
-		return
-	}
-
-	if len(ItemModels) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
-		return
-	}
-
-	// Create a slice to store serialized Items
-	var serializedItems []interface{}
-
-	// Loop through the array of ItemModels and create serializers for each
-	for _, org := range ItemModels {
-		serializer := NewItemSerializer(c, org)
-		serializedItems = append(serializedItems, serializer.Response())
-	}
-
-	c.JSON(http.StatusOK, gin.H{"Items": serializedItems})
 }
 
 // aux functions

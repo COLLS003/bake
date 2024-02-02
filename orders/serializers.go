@@ -1,7 +1,6 @@
 package orders
 
 import (
-	"colls.labs.bake/items"
 	"github.com/gin-gonic/gin"
 )
 
@@ -70,18 +69,17 @@ func NewOrderItemSerializer(c *gin.Context, item OrderItemModel) *OrderItemSeria
 
 // Response returns the serialized representation of the OrderItemModel
 func (serializer *OrderItemSerializer) Response() map[string]interface{} {
-	// Include item details in the response
-	itemSerializer := items.NewItemSerializer(serializer.c, serializer.Item.Item)
-	itemResponse := itemSerializer.Response()
+	// itemSerializer := items.NewItemSerializer(serializer.c, serializer.Item.Item)
+	// itemResponse := itemSerializer.Response()
 	return map[string]interface{}{
 		"ID":           serializer.Item.ID,
 		"CreatedAt":    serializer.Item.CreatedAt,
 		"UpdatedAt":    serializer.Item.UpdatedAt,
 		"DeletedAt":    serializer.Item.DeletedAt,
 		"OrderModelID": serializer.Item.OrderModelID,
-		"Item":         itemResponse,
-		"Quantity":     serializer.Item.Quantity,
-		"Price":        serializer.Item.Price,
+		// "Item":         itemResponse,
+		"Quantity": serializer.Item.Quantity,
+		"Price":    serializer.Item.Price,
 		// Add other fields as needed
 	}
 }
